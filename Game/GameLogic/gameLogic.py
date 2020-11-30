@@ -12,12 +12,15 @@ def reset_board():
             row.append(0)
         board.append(row)
 
-def add_piece(x, y, turn):
+def add_piece(x, y, turn, score_white, score_black):
     global board
     if turn == 'white':
         board[x][y] = 1
+        score_white += 1
     else:
         board[x][y] = 2
+        score_black += 1
+    return (score_white, score_black)
 
 def mark_eliminated_pieces(window):
     global board_aux
@@ -29,11 +32,13 @@ def mark_eliminated_pieces(window):
                 line1.draw(window)
 
 
-def eliminate_surrounded_pieces():
+def eliminate_surrounded_pieces(score_white, score_black):
     global board
     global board_aux
     board_aux = []
     board_aux = board
+    score_white = 0
+    score_black = 0
     for i in range(0, 19):
         for j in range(0, 19):
             if board_aux[i][j] == 1 or board_aux[i][j] == 2:
@@ -43,9 +48,11 @@ def eliminate_surrounded_pieces():
         for j in range(0, 19):
             if board_aux[i][j] == -1:
                 board[i][j] = 1
+                score_white += 1
             elif board_aux[i][j] == -2:
                 board[i][j] = 2
-    print(board)
+                score_black += 1
+    return (score_white, score_black)
 
 def has_liberty(x, y):
     global queue

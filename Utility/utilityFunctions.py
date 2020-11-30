@@ -18,8 +18,24 @@ def draw_bordered_text(window, title, x, y):
     text_box.setFace('helvetica')
     text_box.draw(window)
 
+def draw_small_bordered_text(window, title, x, y):
+    text_border = Rectangle(Point(x-30, y-20), Point(x+30, y+20))
+    text_border.setOutline('white')
+    text_border.draw(window)
+
+    text_box = Text(Point(x, y), title)
+    text_box.setTextColor('white')
+    text_box.setSize(20)
+    text_box.setFace('helvetica')
+    text_box.draw(window)
+
 def reset_screen(window):
     reset_green = Rectangle(Point(0, 0), Point(1000, 700))
+    reset_green.setFill(color_rgb(0, 100, 0))
+    reset_green.draw(window)
+
+def reset_part_screen(window, x1, y1, x2, y2):
+    reset_green = Rectangle(Point(x1, y1), Point(x2, y2))
     reset_green.setFill(color_rgb(0, 100, 0))
     reset_green.draw(window)
 

@@ -35,6 +35,7 @@ def start_game():
                 else:
                     turn = 'white'
 
+
     window.close()
 
 
