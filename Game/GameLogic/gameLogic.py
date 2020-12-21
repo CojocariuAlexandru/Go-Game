@@ -12,6 +12,21 @@ def reset_board():
             row.append(0)
         board.append(row)
 
+def check_valid_position(x, y):
+    global board
+    if board[x][y] == 0:
+        return True
+    return False
+
+def get_pieces_count():
+    global board
+    count = 0
+    for i in range(0, 19):
+        for j in range(0, 19):
+            if board[i][j] != 0:
+                count += 1
+    return count
+
 def add_piece(x, y, turn, score_white, score_black):
     global board
     if turn == 'white':
