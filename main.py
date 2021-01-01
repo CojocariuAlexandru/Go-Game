@@ -6,10 +6,12 @@ from Scripts.Game.GameLogic import gameLogic as glog
 
 
 
+"""Sets the title and dimensions of the screen"""
 def adjust_window(length, width):
     global window
     window = GraphWin("Go Game", length, width)
 
+"""Handles the game loop"""
 def start_game():
     global window
     game_run_flag = True

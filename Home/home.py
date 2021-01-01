@@ -3,6 +3,7 @@ from Scripts.Utility import utilityFunctions as util
 from Scripts.Game import game as game
 
 class HomeManager:
+    """Define all coordinates of buttons, pieces, etc."""
     def __init__(self):
         self.choose_oponent_flag = False
         self.titleX = 500
@@ -20,16 +21,28 @@ class HomeManager:
         self.offsetX = 100
         self.offsetY = 20
 
+    """Draw the buttons on the home screen"""
     def draw_home(self, window):
         util.reset_screen(window)
-        util.draw_unbordered_text(window,"Go Game", self.titleX, self.titleY)
-        util.draw_bordered_text(window, "Play", self.playButtonX, self.playButtonY)
-        util.draw_bordered_text(window, "Quit", self.quitButtonX, self.quitButtonY)
-        util.draw_image(window, "../Images/GoTable.png", self.imageX, self.imageY)
+        util.draw_unbordered_text(window, "Go Game",
+                                  self.titleX, self.titleY)
 
+        util.draw_bordered_text(window, "Play",
+                                self.playButtonX, self.playButtonY)
+
+        util.draw_bordered_text(window, "Quit",
+                                self.quitButtonX, self.quitButtonY)
+
+        util.draw_image(window, "../Images/GoTable.png",
+                        self.imageX, self.imageY)
+
+    """Handles clicks on the home screen"""
     def handle_mouse_click_home(self, window):
         mouse_data = window.getMouse()
-        if util.check_inside(mouse_data.x, mouse_data.y, self.playButtonX-self.offsetX, self.playButtonY-self.offsetY, self.playButtonX+self.offsetX, self.playButtonY+self.offsetY):
+
+        if util.check_inside(mouse_data.x, mouse_data.y,
+                             self.playButtonX-self.offsetX, self.playButtonY-self.offsetY,
+                             self.playButtonX+self.offsetX, self.playButtonY+self.offsetY):
             if self.choose_oponent_flag == False:
                 util.draw_bordered_text(window, "Computer", self.computerButtonX, self.computerButtonY)
                 util.draw_bordered_text(window, "Player 2", self.player2ButtonX, self.player2ButtonY)
