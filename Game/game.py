@@ -34,6 +34,10 @@ class GameManager:
         self.PIECE_RADIUS = 10
         self.SCOREBOARD_OFFSET_X = 29
         self.SCOREBOARD_OFFSET_Y = 19
+        self.FINISHED_X1 = 190
+        self.FINISHED_X2 = 750
+        self.FINISHED_Y1 = 200
+        self.FINISHED_Y2 = 400
         self.SCORE_WHITE_X1 = self.SCORE_WHITE_X - self.SCOREBOARD_OFFSET_X
         self.SCORE_WHITE_Y1 = self.SCORE_WHITE_Y - self.SCOREBOARD_OFFSET_Y
         self.SCORE_WHITE_X2 = self.SCORE_WHITE_X + self.SCOREBOARD_OFFSET_X
@@ -78,23 +82,33 @@ class GameManager:
         valid_move_flag = False
         while valid_move_flag is False:
             mouse_data = window.getMouse()
-            if util.check_inside(mouse_data.x, mouse_data.y,
-                                 self.BACK_TO_MENU_X - self.OFFSET_X,
-                                 self.BACK_TO_MENU_Y - self.OFFSET_Y,
-                                 self.BACK_TO_MENU_X + self.OFFSET_X,
-                                 self.BACK_TO_MENU_Y + self.OFFSET_Y):
-                return (True, "Home")
-            elif util.check_inside(mouse_data.x, mouse_data.y,
-                                   self.PASS_X - self.OFFSET_X,
-                                   self.PASS_Y - self.OFFSET_Y,
-                                   self.PASS_X + self.OFFSET_X,
-                                   self.PASS_Y + self.OFFSET_Y):
-                return self.handle_pressed_on_passed()
+            if glog.get_winner() != 'nowinner':
+                self.countPassed = 0
+                self.show_finished_game_message(window, glog.get_winner() + "wins")
+            if self.countPassed < 2 and glog.get_winner() == 'nowinner':
+                if util.check_inside(mouse_data.x, mouse_data.y,
+                                     self.BACK_TO_MENU_X - self.OFFSET_X,
+                                     self.BACK_TO_MENU_Y - self.OFFSET_Y,
+                                     self.BACK_TO_MENU_X + self.OFFSET_X,
+                                     self.BACK_TO_MENU_Y + self.OFFSET_Y):
+                    return (True, "Home")
+                elif util.check_inside(mouse_data.x, mouse_data.y,
+                                       self.PASS_X - self.OFFSET_X,
+                                       self.PASS_Y - self.OFFSET_Y,
+                                       self.PASS_X + self.OFFSET_X,
+                                       self.PASS_Y + self.OFFSET_Y):
+                    return self.handle_pressed_on_passed(window)
+                else:
+                    for i in range(0, 19):
+                        for j in range(0, 19):
+                            if self.check_inside_piece_spot(i, j, mouse_data.x, mouse_data.y) is True:
+                                return self.handle_placed_a_piece(i, j, turn, window)
             else:
-                for i in range(0, 19):
-                    for j in range(0, 19):
-                        if self.check_inside_piece_spot(i, j, mouse_data.x, mouse_data.y) is True:
-                            return self.handle_placed_a_piece(i, j, turn, window)
+                if util.check_inside(mouse_data.x, mouse_data.y,
+                                     600 - 100, 300 - 20,
+                                     600 + 100, 300 + 20):
+                    self.countPassed = 0
+                    return (True, "Home")
         return (True, "Game")
 
     """For computer its strategy is to make random moves"""
@@ -118,13 +132,14 @@ class GameManager:
                 return (True, "Game")
 
     """Handles case if user presses on 'pass turn' button"""
-    def handle_pressed_on_passed(self):
+    def handle_pressed_on_passed(self, window):
         if self.countPassed != 1:
             self.countPassed = 1
         elif self.countPassed == 1:
             self.countPassed += 1
         if self.countPassed == 2:
-            return (True, "Home")
+            self.show_finished_game_message(window, 'Draw')
+            return (True, "Game")
         else:
             return (True, "PutPiece")
 
@@ -145,6 +160,7 @@ class GameManager:
             return (True, "PutPiece")
         else:
             valid_move_flag = False
+            return (True, "Game")
 
     """Checks if the player pressed on an intersection of lines in the playing grid"""
     def check_inside_piece_spot(self, i, j, mouse_x, mouse_y):
@@ -171,6 +187,14 @@ class GameManager:
                                       self.SCORE_WHITE_X, self.SCORE_WHITE_Y)
         util.draw_small_bordered_text(window, str(self.score_black),
                                       self.SCORE_BLACK_X, self.SCORE_BLACK_Y)
+
+    """Draws a message when the game is finished"""
+    def show_finished_game_message(self, window, message):
+        util.reset_part_screen(window,
+                               self.FINISHED_X1, self.FINISHED_Y1,
+                               self.FINISHED_X2, self.FINISHED_Y2)
+        util.draw_unbordered_text(window, message, 300, 300)
+        util.draw_bordered_text(window, "Back to menu", 600, 300)
 
     """Call gameLogic.py modules which handles the logic of the board"""
     def perform_game_logic(self, window, i, j, turn):

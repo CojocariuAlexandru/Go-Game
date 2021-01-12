@@ -9,7 +9,7 @@ from Scripts.Game.GameLogic import gameLogic as glog
 """Sets the title and dimensions of the screen"""
 def adjust_window(length, width):
     global window
-    window = GraphWin("Go Game", length, width)
+    window = GraphWin("Go Game", length, width, autoflush=False)
 
 """Handles the game loop"""
 def start_game():
@@ -57,9 +57,6 @@ def start_game():
                 if game_state == 'PutPiece':
                     game_state = 'Game'
                 game_manager.make_random_move(window)
-
-            if glog.get_pieces_count() == 19*19:
-                game_state = 'Home'
 
 
     window.close()

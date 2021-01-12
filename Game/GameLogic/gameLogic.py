@@ -24,14 +24,26 @@ def check_valid_position(x, y):
 
 
 """Counts the number of pieces on the board"""
-def get_pieces_count():
+def get_winner():
     global board
-    count = 0
+    free = 0
+    white = 0
+    black = 0
+    total = 19*19
     for i in range(0, 19):
         for j in range(0, 19):
-            if board[i][j] != 0:
-                count += 1
-    return count
+            if board[i][j] == 0:
+                free += 1
+            elif board[i][j] == 1:
+                white += 1
+            else:
+                black += 1
+    if white > free + black:
+        return 'white'
+    elif black > free + white:
+        return 'black'
+    else:
+        return 'nowinner'
 
 
 """Adds a piece on the board"""
